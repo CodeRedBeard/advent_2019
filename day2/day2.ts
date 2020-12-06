@@ -43,13 +43,33 @@ function printProgram(program: IntProgram) {
 }
 
 function evalProgram(program: IntProgram): number {
-    console.log(`RUNNING...`);
     runProgram(program);
-
     const result = program[0];
-    console.log(`DONE: ${result}`);
-
     return result;
+}
+
+function runProgramArgs(program: IntProgram, arg1: number, arg2: number): number {
+    program = program.slice();
+    program[1] = arg1;
+    program[2] = arg2;
+    //printProgram(program);
+    const result = evalProgram(program);
+    return result;
+}
+
+function findResultArgs(program: IntProgram, desired: number): { noun: number, verb: number } | undefined {
+    for (let noun = 0; noun <= 99; ++noun) {
+        for (let verb = 0; verb <= 99; ++verb) {
+            const result2 = runProgramArgs(program, noun, verb);
+            if (result2 === desired) {
+                return {
+                    noun: noun,
+                    verb: verb,
+                };
+            }
+        }
+    }
+    return undefined;
 }
 
 export function run(lines: string[]) {
@@ -57,9 +77,9 @@ export function run(lines: string[]) {
 
     const program = lines[0].split(',').map(Number);
 
-    const program1 = program.slice();
-    program1[1] = 12;
-    program1[2] = 2;
-    printProgram(program1);
-    console.log(`Run 1: ${evalProgram(program1)}`);
+    const result1 = runProgramArgs(program, 12, 2);
+    console.log(`Run 1: ${result1}`);
+
+    const result2 = findResultArgs(program, 19690720);
+    console.log(`Run 2: ${100 * result2.noun + result2.verb}`);
 }
