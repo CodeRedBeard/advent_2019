@@ -32,7 +32,9 @@ async function runDay(dayNum: number) {
   console.log(`Day ${dayNum}`);
   let file_data = fs.readFileSync(
     `./day${dayNum}/input.txt`,
-    { encoding: 'utf8' });
+    { encoding: 'utf8' })
+    .replace(/\r/g, '')
+    .split('\n');
   let day_mod = `./day${dayNum}/day${dayNum}`;
   const DayModule = await import(day_mod);
   await Promise.resolve(DayModule.run(file_data));
