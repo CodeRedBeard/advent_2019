@@ -3,12 +3,42 @@ import { test, TestCase } from '../util/test';
 
 interface InOutTest {code: IntProgramCode; val: number;}
 const testCasesInOut: TestCase<InOutTest, number>[] = [
-  [
-    {
-      code: [3, 0, 4, 0, 99],
-      val: 123
-    },
-    123],
+  [{
+    code: [3, 0, 4, 0, 99],
+    val: 123
+  }, 123],
+  [{
+    code: [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8],
+    val: 8
+  }, 1],
+  [{
+    code: [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8],
+    val: 7
+  }, 1],
+  [{
+    code: [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8],
+    val: 8
+  }, 0],
+  [{
+    code: [3,3,1108,-1,8,3,4,3,99],
+    val: 8
+  }, 1],
+  [{
+    code: [3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9],
+    val: 0
+  }, 0],
+  [{
+    code: [3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9],
+    val: 10
+  }, 1],
+  [{
+    code: [3,3,1105,-1,9,1101,0,0,12,4,12,99,1],
+    val: 0
+  }, 0],
+  [{
+    code: [3,3,1105,-1,9,1101,0,0,12,4,12,99,1],
+    val: 10
+  }, 1],
 ];
 
 interface AddrTest {code: IntProgramCode; addr: number;}
@@ -24,7 +54,7 @@ const testCasesMult: TestCase<AddrTest, number>[] = [
 function evalProgramOutput(inProgram: IntProgram): number[] {
   let outVals = new Array<number>();
   let program: IntProgram = {
-    code: inProgram.code,
+    code: inProgram.code.slice(),
     input: inProgram.input,
     output: (x) => {
       outVals.push(x);
@@ -61,5 +91,11 @@ export function run(lines: string[]) {
     code: program,
     input: () => 1,
   });
-  console.log(`Part1 (Diag output): ${result_1}`);
+  console.log(`Part1 (AC diag output): ${result_1}`);
+
+  const result_2 = evalProgramOutput({
+    code: program,
+    input: () => 5,
+  });
+  console.log(`Part2 (Radiator diag output): ${result_2}`);
 }

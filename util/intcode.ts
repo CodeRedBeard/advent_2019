@@ -12,8 +12,9 @@ interface ProgramInstance extends IntProgram {
   instCount: number;
 }
 
-function runOpCode(idx: number, program: ProgramInstance): number | undefined {
+function runOpCode(program: ProgramInstance): number | undefined {
   const code = program.code;
+  const idx = program.instIndex;
   const inst = code[idx];
   if (inst === 99) {
       return undefined;
@@ -45,25 +46,57 @@ function runOpCode(idx: number, program: ProgramInstance): number | undefined {
     }
   }
   switch (op) {
-    case 1: {
+    case 1: { // add
       const val = getParam(1) + getParam(2);
       setParam(3, val);
       return 4;
     }
-    case 2: {
+    case 2: { // mult
       const val = getParam(1) * getParam(2);
       setParam(3, val);
       return 4;
     }
-    case 3: {
+    case 3: { // input
       const val = program.input();
       setParam(1, val);
       return 2;
     }
-    case 4: {
+    case 4: { // output
       const val = getParam(1);
       program.output(val);
       return 2;
+    }
+    case 5: { // jump-if-true
+      const val = getParam(1);
+      const ptr = getParam(2);
+      if (val !== 0) {
+        program.instIndex = ptr;
+        return 0;
+      }
+      return 3;
+    }
+    case 6: { // jump-if-false
+      const val = getParam(1);
+      const ptr = getParam(2);
+      if (val === 0) {
+        program.instIndex = ptr;
+        return 0;
+      }
+      return 3;
+    }
+    case 7: { // less-than
+      const a = getParam(1);
+      const b = getParam(2);
+      const val = (a < b) ? 1 : 0;
+      setParam(3, val);
+      return 4;
+    }
+    case 8: { // equals
+      const a = getParam(1);
+      const b = getParam(2);
+      const val = (a === b) ? 1 : 0;
+      setParam(3, val);
+      return 4;
     }
   }
   throw new Error(`Invalid op: ${op} @ ${idx}`);
@@ -75,7 +108,7 @@ export function runProgram(program: IntProgram): ProgramInstance {
     instCount: 0,
   });
   while (true) {
-    const result = runOpCode(runningProgram.instIndex, runningProgram);
+    const result = runOpCode(runningProgram);
     ++runningProgram.instCount;
     if (result === undefined) {
       break;
