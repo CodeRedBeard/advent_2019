@@ -1,5 +1,5 @@
-import { TestCase, test } from '../test';
-import { notEmpty } from '../util';
+import { TestCase, test } from '../util/test';
+import { notEmpty } from '../util/util';
 
 let testCases1: TestCase<string[],number>[] = [
   [['R8,U5,L5,D3','U7,R6,D4,L4'], 6],

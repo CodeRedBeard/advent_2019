@@ -1,4 +1,4 @@
-import { test, TestCase } from '../test';
+import { test, TestCase } from '../util/test';
 
 const testCases1: TestCase<string,number>[] = [
   ['12', 2],
