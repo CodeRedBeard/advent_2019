@@ -4,7 +4,7 @@ export function test<T, Y>(f: (t: T) => Y, cases: TestCase<T,Y>[]) {
     let v = f(vIn);
     if (vOut !== v) {
       throw new Error(
-        `case [${idx}]: ${vOut} != f(${vIn})`);
+        `case [${idx}]: ${vOut} != f(${vIn}) = ${v}`);
     }
   }
 }
